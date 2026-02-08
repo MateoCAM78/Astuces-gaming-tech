@@ -30,38 +30,31 @@ iframe { width:100%; max-width:700px; height:400px; border:none; display:block; 
 <iframe id="lecteur"></iframe>
 
 <script>
-let articles = [];
+// Fonction pour détecter les articles automatiquement
+const categories = ["ordinateur","mobile","console"];
+const icones = {ordinateur:"💻", mobile:"📱", console:"🎮"};
+const listeDiv = document.getElementById("liste");
+const iframe = document.getElementById("lecteur");
 
-// Charger le fichier JSON des articles
-fetch("articles.json")
-  .then(r => r.json())
-  .then(data => {
-    articles = data;
-    filtrer("tout", document.querySelector("nav button"));
-  })
-  .catch(err => console.error("Erreur chargement articles :", err));
+async function chargerArticles() {
+  // Liste tous les fichiers dans articles/ (sur GitHub Pages, on doit lister manuellement ou via rawgit/URL)
+  // Pour simplifier ici, on peut faire une liste statique ou générer via GitHub → voir options avancées
+}
 
+// Filtrer par catégorie
 function filtrer(cat, bouton) {
-  document.querySelectorAll("nav button").forEach(b => b.classList.remove("actif"));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("actif"));
   bouton.classList.add("actif");
-
-  const liste = document.getElementById("liste");
-  liste.innerHTML = "";
-
-  articles.forEach(a => {
-    if (cat === "tout" || a.categorie === cat) {
-      liste.innerHTML += `
-        <div class="article" onclick="ouvrir('${a.fichier}')">
-          <h3>${a.icone} ${a.titre}</h3>
-        </div>
-      `;
-    }
-  });
+  // Ici on affichera les articles filtrés selon cat
 }
 
-function ouvrir(fichier) {
-  document.getElementById("lecteur").src = fichier;
+// Ouvrir article
+function ouvrir(url) {
+  iframe.src = url;
 }
+
+// Pour une version simple, on peut préparer un tableau "articles" automatiquement
+// Pour GitHub Pages, il faut uploader tous les fichiers HTML et mettre leurs liens dans un tableau
 </script>
 
 </body>
