@@ -10,9 +10,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-body {
-  margin: 0;
+* {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
   background: #f4f4f4;
 }
 
@@ -31,6 +36,7 @@ nav {
   padding: 10px;
   position: sticky;
   top: 0;
+  z-index: 1000;
 }
 
 nav button {
@@ -93,16 +99,14 @@ iframe {
 </header>
 
 <nav>
-  <button class="actif" onclick="filtrer('tout', this)">📂 Tout</button>
-  <button onclick="filtrer('ordinateur', this)">💻 Ordinateur</button>
-  <button onclick="filtrer('mobile', this)">📱 Mobile</button>
-  <button onclick="filtrer('console', this)">🎮 Console</button>
+  <button class="actif" onclick="changerOnglet('tout', this)">📂 Tout</button>
+  <button onclick="changerOnglet('ordinateur', this)">💻 Ordinateur</button>
+  <button onclick="changerOnglet('mobile', this)">📱 Mobile</button>
+  <button onclick="changerOnglet('console', this)">🎮 Console</button>
 </nav>
 
-<!-- Liste des articles -->
 <div id="liste"></div>
 
-<!-- Lecteur iframe avec bouton retour -->
 <div id="lecteur-container" style="display:none;">
   <button id="retour" onclick="retourArticles()">← Retour aux articles</button>
   <iframe id="lecteur"></iframe>
@@ -112,7 +116,7 @@ iframe {
 let articles = [];
 let categorieActuelle = "tout";
 
-// Charger les articles depuis articles.json
+// Charger articles depuis articles.json
 fetch("articles.json")
   .then(res => res.json())
   .then(data => {
@@ -120,7 +124,7 @@ fetch("articles.json")
     afficherArticles();
   });
 
-// Afficher la liste des articles filtrée
+// Afficher articles filtrés
 function afficherArticles() {
   const liste = document.getElementById("liste");
   liste.innerHTML = "";
@@ -136,22 +140,28 @@ function afficherArticles() {
   });
 }
 
-// Filtrer les articles par catégorie
-function filtrer(cat, bouton) {
+// Cliquer sur onglet
+function changerOnglet(cat, bouton) {
   categorieActuelle = cat;
   document.querySelectorAll("nav button").forEach(b => b.classList.remove("actif"));
   bouton.classList.add("actif");
+
+  // Si un article est ouvert, on revient à la liste
+  document.getElementById("lecteur-container").style.display = "none";
+  document.getElementById("lecteur").src = "";
+  document.getElementById("liste").style.display = "block";
+
   afficherArticles();
 }
 
-// Ouvrir un article en grand
+// Ouvrir article
 function ouvrir(fichier) {
   document.getElementById("liste").style.display = "none";
   document.getElementById("lecteur-container").style.display = "block";
   document.getElementById("lecteur").src = fichier;
 }
 
-// Retour à la liste des articles
+// Retour aux articles
 function retourArticles() {
   document.getElementById("lecteur").src = "";
   document.getElementById("lecteur-container").style.display = "none";
