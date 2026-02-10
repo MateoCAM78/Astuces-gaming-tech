@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Astuces Gaming & Tech</title>
 
-<!-- Police Inter (comme ChatGPT) -->
+<!-- Police Inter -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -71,6 +71,17 @@ iframe {
   background: white;
   border-radius: 10px;
 }
+
+#retour {
+  margin: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background: #ff4757;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
 </style>
 </head>
 
@@ -88,13 +99,20 @@ iframe {
   <button onclick="filtrer('console', this)">🎮 Console</button>
 </nav>
 
+<!-- Liste des articles -->
 <div id="liste"></div>
-<iframe id="lecteur"></iframe>
+
+<!-- Lecteur iframe avec bouton retour -->
+<div id="lecteur-container" style="display:none;">
+  <button id="retour" onclick="retourArticles()">← Retour aux articles</button>
+  <iframe id="lecteur"></iframe>
+</div>
 
 <script>
 let articles = [];
 let categorieActuelle = "tout";
 
+// Charger les articles depuis articles.json
 fetch("articles.json")
   .then(res => res.json())
   .then(data => {
@@ -102,6 +120,7 @@ fetch("articles.json")
     afficherArticles();
   });
 
+// Afficher la liste des articles filtrée
 function afficherArticles() {
   const liste = document.getElementById("liste");
   liste.innerHTML = "";
@@ -117,6 +136,7 @@ function afficherArticles() {
   });
 }
 
+// Filtrer les articles par catégorie
 function filtrer(cat, bouton) {
   categorieActuelle = cat;
   document.querySelectorAll("nav button").forEach(b => b.classList.remove("actif"));
@@ -124,8 +144,18 @@ function filtrer(cat, bouton) {
   afficherArticles();
 }
 
+// Ouvrir un article en grand
 function ouvrir(fichier) {
+  document.getElementById("liste").style.display = "none";
+  document.getElementById("lecteur-container").style.display = "block";
   document.getElementById("lecteur").src = fichier;
+}
+
+// Retour à la liste des articles
+function retourArticles() {
+  document.getElementById("lecteur").src = "";
+  document.getElementById("lecteur-container").style.display = "none";
+  document.getElementById("liste").style.display = "block";
 }
 </script>
 
